@@ -8,6 +8,9 @@
   --b: #62a5ff;
   --c: #ff845e;
   --shadow: 0 22px 60px rgba(0, 0, 0, .42);
+  --radius-card: 16px;
+  --radius-control: 10px;
+  --ease: cubic-bezier(.2,.7,.2,1);
 }
 body.day {
   --bg: #eaf4fb;
@@ -34,20 +37,23 @@ header p { margin: 6px 0 0; color: var(--muted); }
 main { width: min(1180px, 95vw); margin: 0 auto 24px; display: grid; grid-template-columns: 1fr 1.3fr; gap: 12px; }
 .card {
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   background: var(--panel);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
   padding: 12px;
   transform-style: preserve-3d;
-  transition: transform .22s ease;
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease);
 }
+.card:hover { box-shadow: 0 28px 64px rgba(0,0,0,.42); border-color: rgba(255,255,255,.3); }
 .card h2 { margin: 0 0 10px; font-family: "Unbounded", sans-serif; font-size: 1rem; }
 
-input, select { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 9px; background: rgba(255,255,255,.04); color: var(--text); }
+input, select { width: 100%; border: 1px solid var(--line); border-radius: var(--radius-control); padding: 9px; background: rgba(255,255,255,.04); color: var(--text); }
+input:focus, select:focus { outline: none; box-shadow: 0 0 0 2px rgba(98,165,255,.28); }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-.btn { border: 0; border-radius: 10px; padding: 9px 12px; font-weight: 700; cursor: pointer; }
+.btn { border: 0; border-radius: var(--radius-control); padding: 9px 12px; font-weight: 700; cursor: pointer; transition: transform .18s var(--ease), filter .18s var(--ease); }
+.btn:hover { transform: translateY(-1px); filter: saturate(1.08); }
 .btn.primary { background: linear-gradient(120deg, var(--a), var(--b)); color: #06212a; }
 .btn.ghost { border: 1px solid var(--line); background: rgba(255,255,255,.03); color: var(--text); }
 .dup { min-height: 18px; color: #ffd4c8; font-size: .82rem; }
