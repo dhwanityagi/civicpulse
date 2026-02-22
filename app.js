@@ -1,5 +1,3 @@
-const IS_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
-const API = 'http://127.0.0.1:5006/api';
 const STORAGE = 'civicpulse_v2_reports';
 let reports = JSON.parse(localStorage.getItem(STORAGE) || '[]');
 if (!reports.length) reports = [
@@ -16,6 +14,7 @@ const markers = L.layerGroup().addTo(map);
 const form = document.getElementById('report-form');
 const clustersNode = document.getElementById('clusters');
 const zoneDetails = document.getElementById('zoneDetails');
+const sidePanel = document.getElementById('sidePanel');
 const dupNotice = document.getElementById('dupNotice');
 const geoBtn = document.getElementById('geoBtn');
 const modeBtn = document.getElementById('modeBtn');
@@ -23,9 +22,31 @@ const pdfBtn = document.getElementById('pdfBtn');
 const chat = document.getElementById('chat');
 const chatInput = document.getElementById('chatInput');
 const askBtn = document.getElementById('askBtn');
+const filterCategory = document.getElementById('filterCategory');
+const minConfidence = document.getElementById('minConfidence');
 
 function save() { localStorage.setItem(STORAGE, JSON.stringify(reports)); }
 function distance(a, b) { return Math.hypot(a.lat - b.lat, a.lng - b.lng); }
+
+function setupBackgroundParticles() {
+  const c = document.getElementById('bg-canvas');
+  const g = c.getContext('2d');
+  function resize() { c.width = innerWidth; c.height = innerHeight; }
+  resize();
+  addEventListener('resize', resize);
+  const pts = Array.from({ length: 60 }, () => ({ x: Math.random() * c.width, y: Math.random() * c.height, r: Math.random() * 1.8, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25 }));
+  (function draw() {
+    g.clearRect(0, 0, c.width, c.height);
+    pts.forEach((p) => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > c.width) p.vx *= -1;
+      if (p.y < 0 || p.y > c.height) p.vy *= -1;
+      g.fillStyle = 'rgba(180,235,255,.35)';
+      g.beginPath(); g.arc(p.x, p.y, p.r, 0, Math.PI * 2); g.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+}
 
 function clusterize() {
   const buckets = new Map();
@@ -53,6 +74,25 @@ function colorOf(c) {
   return '#49f4d0';
 }
 
+function applyFilters(clusters) {
+  const cat = filterCategory.value;
+  const conf = Number(minConfidence.value);
+  return clusters.filter((c) => (cat === 'all' || c.categories[cat]) && c.confidence >= conf);
+}
+
+function burstAt(lat, lng, color) {
+  const wave = L.circle([lat, lng], { radius: 40, color, fillOpacity: 0.06, weight: 2 }).addTo(markers);
+  let r = 40;
+  const id = setInterval(() => {
+    r += 35;
+    wave.setRadius(r);
+    if (r > 260) {
+      clearInterval(id);
+      markers.removeLayer(wave);
+    }
+  }, 60);
+}
+
 function drawMap(clusters) {
   markers.clearLayers();
   clusters.forEach((c) => {
@@ -72,6 +112,7 @@ function drawMap(clusters) {
 
 function showZone(c) {
   const top = Object.entries(c.categories).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Mixed';
+  sidePanel.classList.add('active');
   zoneDetails.innerHTML = `
     <strong>Zone ${c.key}</strong><br/>
     Reports: ${c.total} | Avg Severity: ${c.avg}<br/>
@@ -145,11 +186,11 @@ function renderAnalytics(clusters) {
 }
 
 function refresh() {
-  const clusters = clusterize();
-  drawMap(clusters);
-  renderFeed(clusters);
-  renderAnalytics(clusters);
-  if (clusters[0]) showZone(clusters[0]);
+  const filtered = applyFilters(clusterize());
+  drawMap(filtered);
+  renderFeed(filtered);
+  renderAnalytics(filtered);
+  if (filtered[0]) showZone(filtered[0]);
 }
 
 form.addEventListener('submit', (e) => {
@@ -168,12 +209,16 @@ form.addEventListener('submit', (e) => {
   dupNotice.textContent = dup ? 'Similar issue found nearby. Added as signal to existing cluster.' : '';
   reports.unshift(obj);
   save();
+  burstAt(obj.lat, obj.lng, '#49f4d0');
   refresh();
   form.reset();
   document.getElementById('severity').value = 6;
   document.getElementById('lat').value = 28.4595;
   document.getElementById('lng').value = 77.0266;
 });
+
+filterCategory.addEventListener('change', refresh);
+minConfidence.addEventListener('input', refresh);
 
 geoBtn.addEventListener('click', () => {
   navigator.geolocation?.getCurrentPosition((p) => {
@@ -227,4 +272,5 @@ askBtn.addEventListener('click', () => {
   });
 })();
 
+setupBackgroundParticles();
 refresh();

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div class="radar-sweep" aria-hidden="true"></div>
 
     <header>
@@ -46,6 +47,16 @@
           <div class="actions">
             <button type="button" id="modeBtn" class="btn ghost">Night Map</button>
             <button type="button" id="pdfBtn" class="btn ghost">Download Zone Summary</button>
+          </div>
+          <div class="row">
+            <select id="filterCategory">
+              <option value="all">All Categories</option>
+              <option>Pothole</option>
+              <option>Streetlight</option>
+              <option>Waste</option>
+              <option>Water Leak</option>
+            </select>
+            <label>Min Confidence <input id="minConfidence" type="range" min="0" max="95" value="0" /></label>
           </div>
         </form>
         <div id="dupNotice" class="dup"></div>
