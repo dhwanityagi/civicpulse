@@ -7,19 +7,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="city-glow" aria-hidden="true"></div>
+    <div class="radar-sweep" aria-hidden="true"></div>
 
     <header>
-      <p class="kicker">Civic Intelligence Grid</p>
+      <p class="kicker">Smart City Incident Intelligence</p>
       <h1>CivicPulse</h1>
-      <p>Crowd-verified city radar with confidence clustering and triage overlays.</p>
+      <p>Live clustering, confidence scoring, geospatial triage, and civic analytics.</p>
     </header>
 
     <main>
-      <section class="card tilt" data-tilt>
+      <section class="card controls" data-tilt>
         <h2>Create Report</h2>
         <form id="report-form">
           <input id="title" placeholder="Issue title" required />
@@ -33,26 +36,50 @@
             <input id="severity" type="number" min="1" max="10" value="6" required />
           </div>
           <div class="row">
-            <input id="lat" type="number" step="0.001" value="28.459" required />
-            <input id="lng" type="number" step="0.001" value="77.026" required />
+            <input id="lat" type="number" step="0.0001" value="28.4595" required />
+            <input id="lng" type="number" step="0.0001" value="77.0266" required />
           </div>
-          <button type="submit">Add Report</button>
+          <div class="actions">
+            <button type="submit" class="btn primary">Add Report</button>
+            <button type="button" id="geoBtn" class="btn ghost">Use My Location</button>
+          </div>
+          <div class="actions">
+            <button type="button" id="modeBtn" class="btn ghost">Night Map</button>
+            <button type="button" id="pdfBtn" class="btn ghost">Download Zone Summary</button>
+          </div>
         </form>
-        <div class="legend">
-          <span><i class="dot high"></i>High Confidence</span>
-          <span><i class="dot mid"></i>Medium Confidence</span>
-          <span><i class="dot low"></i>Emerging Zone</span>
-        </div>
+        <div id="dupNotice" class="dup"></div>
       </section>
 
-      <section class="card map-card tilt" data-tilt>
-        <h2>Priority Map</h2>
-        <svg id="map" viewBox="0 0 600 300"></svg>
+      <section class="card map-wrap" data-tilt>
+        <h2>Live Heatmap / Cluster Map</h2>
+        <div id="map"></div>
       </section>
 
-      <section class="card full">
-        <h2>Cluster Feed</h2>
+      <section class="card feed">
+        <h2>Cluster Intelligence Feed</h2>
         <div id="clusters" class="clusters"></div>
+      </section>
+
+      <section class="card side-panel" id="sidePanel">
+        <h2>Zone Details</h2>
+        <div id="zoneDetails">Click any cluster on map to inspect details.</div>
+      </section>
+
+      <section class="card analytics">
+        <h2>/analytics</h2>
+        <canvas id="growthChart" height="170"></canvas>
+        <canvas id="categoryChart" height="170"></canvas>
+        <div id="kpi" class="kpi"></div>
+      </section>
+
+      <section class="card assistant">
+        <h2>AI Civic Assistant</h2>
+        <div id="chat" class="chat"></div>
+        <div class="row">
+          <input id="chatInput" placeholder="Are potholes increasing in my area?" />
+          <button id="askBtn" class="btn primary">Ask</button>
+        </div>
       </section>
     </main>
 
