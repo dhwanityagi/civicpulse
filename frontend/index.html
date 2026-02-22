@@ -6,18 +6,20 @@
     <title>CivicPulse</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Clash+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="city-glow" aria-hidden="true"></div>
+
     <header>
       <p class="kicker">Civic Intelligence Grid</p>
       <h1>CivicPulse</h1>
-      <p>Crowd-verified city issue radar with confidence clustering.</p>
+      <p>Crowd-verified city radar with confidence clustering and triage overlays.</p>
     </header>
 
     <main>
-      <section class="card">
+      <section class="card tilt" data-tilt>
         <h2>Create Report</h2>
         <form id="report-form">
           <input id="title" placeholder="Issue title" required />
@@ -36,9 +38,14 @@
           </div>
           <button type="submit">Add Report</button>
         </form>
+        <div class="legend">
+          <span><i class="dot high"></i>High Confidence</span>
+          <span><i class="dot mid"></i>Medium Confidence</span>
+          <span><i class="dot low"></i>Emerging Zone</span>
+        </div>
       </section>
 
-      <section class="card map-card">
+      <section class="card map-card tilt" data-tilt>
         <h2>Priority Map</h2>
         <svg id="map" viewBox="0 0 600 300"></svg>
       </section>
