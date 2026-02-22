@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CivicPulse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Clash+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <p class="kicker">Civic Intelligence Grid</p>
+      <h1>CivicPulse</h1>
+      <p>Crowd-verified city issue radar with confidence clustering.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Create Report</h2>
+        <form id="report-form">
+          <input id="title" placeholder="Issue title" required />
+          <div class="row">
+            <select id="category">
+              <option>Pothole</option>
+              <option>Streetlight</option>
+              <option>Waste</option>
+              <option>Water Leak</option>
+            </select>
+            <input id="severity" type="number" min="1" max="10" value="6" required />
+          </div>
+          <div class="row">
+            <input id="lat" type="number" step="0.001" value="28.459" required />
+            <input id="lng" type="number" step="0.001" value="77.026" required />
+          </div>
+          <button type="submit">Add Report</button>
+        </form>
+      </section>
+
+      <section class="card map-card">
+        <h2>Priority Map</h2>
+        <svg id="map" viewBox="0 0 600 300"></svg>
+      </section>
+
+      <section class="card full">
+        <h2>Cluster Feed</h2>
+        <div id="clusters" class="clusters"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

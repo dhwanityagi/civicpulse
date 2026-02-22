@@ -1,0 +1,34 @@
+:root {
+  --bg: #060d0e;
+  --card: rgba(255,255,255,.07);
+  --line: rgba(255,255,255,.2);
+  --text: #eef8f7;
+  --muted: #a8c7c2;
+  --a: #49f4d0;
+  --b: #62a5ff;
+  --c: #ff845e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  background: radial-gradient(1000px 500px at 10% 0%, #12343a 0%, transparent 70%),
+    radial-gradient(1000px 500px at 90% 10%, #1f2e4c 0%, transparent 70%), var(--bg);
+}
+header { text-align: center; padding: 26px 16px 10px; }
+.kicker { margin: 0; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-size: .7rem; }
+h1 { margin: 8px 0 0; font-family: "Clash Display", "DM Sans", sans-serif; font-size: clamp(2rem, 6vw, 4.1rem); }
+header p { color: var(--muted); }
+main { width: min(1120px, 94vw); margin: 0 auto 24px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 12px; }
+.card { border: 1px solid var(--line); border-radius: 16px; background: var(--card); backdrop-filter: blur(10px); padding: 14px; }
+.full { grid-column: 1 / -1; }
+.card h2 { margin-top: 0; font-family: "Clash Display", "DM Sans", sans-serif; }
+input, select, button { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: rgba(255,255,255,.03); color: var(--text); margin-bottom: 8px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+button { border: 0; color: #031018; font-weight: 700; background: linear-gradient(120deg, var(--a), var(--b)); cursor: pointer; }
+.map-card svg { width: 100%; height: 320px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(140deg, rgba(255,255,255,.05), rgba(0,0,0,.2)); }
+.clusters { display: grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: 8px; }
+.cluster { border: 1px solid var(--line); border-radius: 11px; padding: 10px; }
+.cluster strong { font-family: "Clash Display", "DM Sans", sans-serif; }
+@media (max-width: 920px) { main { grid-template-columns: 1fr; } .full { grid-column: auto; } }
